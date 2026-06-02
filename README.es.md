@@ -14,7 +14,7 @@
 
 ## Dashboard en vivo
 
-![Dashboard en vivo con detección en tiempo real](docs/images/dashboard-live.jpg)
+![Dashboard en vivo con detección en tiempo real](docs/images/dashboard-live.webp)
 
 *Inferencia en tiempo real con **YOLOv11s + TensorRT FP16** sobre Jetson Orin Nano. Métricas en vivo: FPS, latencia, uso de GPU, conteo por clase y variables del entorno físico.*
 
@@ -48,11 +48,10 @@ El sistema sigue una arquitectura de dos capas: el **Jetson Orin Nano** centrali
 ```
 [Navegador del estudiante] ──WebRTC/WebSocket──> [Jetson Orin Nano]
                                                        │
-                                                       ├── YOLO + TensorRT (inferencia)
-                                                       ├── BoT-SORT / ByteTrack (tracking)
+                                                       ├── YOLO + TensorRT (inferencia + tracking + métricas)
                                                        ├── MediaMTX (streaming WebRTC)
                                                        ├── FastAPI + WebSocket (backend)
-                                                       ├── Nginx (frontend)
+                                                       ├── Interfaz web (frontend)
                                                        └── NUT (telemetría UPS por USB)
                                                        │
                                           WiFi/WebSocket │
@@ -87,10 +86,10 @@ Ver [`docs/architecture.pdf`](docs/architecture.pdf) para el documento arquitect
 
 | Capa | Tecnologías |
 |---|---|
-| **Inferencia** | PyTorch, Ultralytics, TensorRT 10.7 (FP16), CUDA 12.6, cuDNN 9.6 |
-| **Tracking** | BoT-SORT, ByteTrack (evaluación comparativa) |
+| **Inferencia + Tracking** | PyTorch, Ultralytics, TensorRT 10.7 (FP16), CUDA 12.6, cuDNN 9.6, BoT-SORT, ByteTrack |
 | **Streaming** | MediaMTX (WebRTC), FFmpeg |
 | **Backend** | FastAPI (Python 3.10), WebSocket, Nginx |
+| **Frontend** | HTML5, WebRTC, WebSocket |
 | **Persistencia** | _A definir_ |
 | **Monitoreo UPS** | NUT (Network UPS Tools) |
 | **SO** | Ubuntu 22.04 (JetPack R36.4.3) |
@@ -116,11 +115,12 @@ También se comparan dos algoritmos de tracking sobre cada detector:
 
 ### Dataset
 
-Dataset propio curado para detección de latas de conservas:
+Dataset propio curado para detección de latas de conservas en entorno industrial de cinta transportadora:
 
 - **Clases:** 3 — `picadillo`, `foie`, `picante`
 - **Total de imágenes:** 1.200
 - **Split:** 1.050 train / 100 validación / 50 test
+- **Capturado in-situ** sobre el hardware objetivo, replicando las condiciones reales de inferencia
 - **Preprocesamiento:** auto-orient, resize-fit a 640×640 (relleno negro)
 - **Aumentos (pipeline Roboflow):** flip horizontal/vertical, rotación ±15°, 15% en escala de grises, saturación ±25%, brillo ±15%, blur hasta 2px, ruido hasta 0,22%. 3 salidas por imagen.
 
@@ -137,7 +137,7 @@ Dataset propio curado para detección de latas de conservas:
 | YOLOv11m | PyTorch | _A completar_ | _A completar_ | _A completar_ |
 | YOLOv11m | TensorRT FP16 | _A completar_ | _A completar_ | _A completar_ |
 
-> Primera corrida validada: **YOLOv11s + TensorRT FP16 → 47,2 FPS sostenidos a 56,5 ms de latencia end-to-end**, GPU al 78%, temperatura del SoC 55°C. Benchmark completo entre todas las combinaciones modelo/backend en progreso.
+> Primera corrida validada: **YOLOv11s + TensorRT FP16 → 47,2 FPS sostenidos a 56,5 ms de latencia end-to-end**, GPU al 78%, temperatura del SoC 55°C. Benchmark completo en progreso.
 
 ---
 
@@ -151,16 +151,15 @@ remote-vision-lab/
 │   ├── architecture.pdf       # Documento arquitectónico completo
 │   └── images/                # Capturas del proyecto
 ├── jetson/
-│   ├── inference/             # Pipeline YOLO + TensorRT
-│   ├── tracking/              # Integración BoT-SORT / ByteTrack
+│   ├── vision/                # Pipeline de inferencia (YOLO + TensorRT + tracking + métricas)
 │   ├── backend/               # FastAPI + WebSocket
 │   ├── streaming/             # Configuración MediaMTX
+│   ├── frontend/              # Interfaz web (HTML5 + WebRTC)
 │   └── ups/                   # Integración telemetría NUT
 ├── esp32/
 │   ├── firmware/              # Código Arduino para ESP32
 │   └── docs/                  # Cableado de sensores/actuadores
 ├── dataset/                   # Imágenes de muestra y metadatos (set completo en Roboflow)
-├── frontend/                  # Interfaz web (HTML5 + WebRTC)
 └── notebooks/                 # Notebooks de entrenamiento y benchmarking
 ```
 
@@ -175,12 +174,13 @@ remote-vision-lab/
 ## Roadmap
 
 - [x] Arquitectura de hardware definida y documentada
-- [x] Dataset propio curado (1.200 imágenes, 3 clases)
+- [x] Dataset propio curado (1.200 imágenes, 3 clases, capturado in-situ)
 - [x] Primera corrida validada (YOLOv11s + TensorRT FP16 → 47,2 FPS)
-- [ ] Entrenamiento de las variantes YOLOv8 / YOLOv11 restantes
+- [x] Streaming dual de cámaras operativo
+- [x] Selección de modelo e inicio de ensayo vía interfaz web
 - [ ] Benchmarking TensorRT FP16 completo en todas las variantes
 - [ ] Evaluación comparativa BoT-SORT vs ByteTrack
-- [ ] Validación de métricas end-to-end
+- [ ] Integración de automatización de cinta transportadora
 - [ ] Interfaz web pública para estudiantes remotos
 - [ ] Experimentos de robustez adversarial (oclusión + iluminación)
 - [ ] Análisis de correlación: telemetría eléctrica ↔ rendimiento del modelo
