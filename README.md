@@ -128,18 +128,16 @@ Custom-curated dataset for canned food detection in an industrial conveyor envir
 
 | Model | Backend | mAP@0.5 | FPS | End-to-end latency |
 |---|---|---|---|---|
-| YOLOv8s | PyTorch | _TBD_ | _TBD_ | _TBD_ |
-| YOLOv8s | TensorRT FP16 | _TBD_ | _TBD_ | _TBD_ |
-| YOLOv8m | PyTorch | _TBD_ | _TBD_ | _TBD_ |
-| YOLOv8m | TensorRT FP16 | _TBD_ | _TBD_ | _TBD_ |
-| YOLOv11s | PyTorch | _TBD_ | _TBD_ | _TBD_ |
-| **YOLOv11s** | **TensorRT FP16** | _TBD_ | **47.2** | **56.5 ms** |
-| YOLOv11m | PyTorch | _TBD_ | _TBD_ | _TBD_ |
-| YOLOv11m | TensorRT FP16 | _TBD_ | _TBD_ | _TBD_ |
+| YOLOv8s | PyTorch | _TBD_ | 17.7 | 56.6 ms |
+| YOLOv8s | TensorRT FP16 | _TBD_ | 18.4 | 54.4 ms |
+| YOLOv8m | PyTorch | _TBD_ | 15.8 | 63.2 ms |
+| YOLOv8m | TensorRT FP16 | _TBD_ | 13.5 | 73.9 ms |
+| YOLOv11s | PyTorch | _TBD_ | 17.4 | 57.4 ms |
+| YOLOv11s | TensorRT FP16 | _TBD_ | 17.7 | 56.4 ms |
+| YOLOv11m | PyTorch | _TBD_ | 15.8 | 63.5 ms |
+| YOLOv11m | TensorRT FP16 | _TBD_ | 14.0 | 71.6 ms |
 
-> First validated run: **YOLOv11s + TensorRT FP16 → 47.2 FPS sustained at 56.5 ms end-to-end latency**, GPU usage 78%, SoC temperature 55°C. Full benchmark in progress.
-
----
+> **Hardware Benchmarking Note (Static Baseline):** Computational metrics (FPS and Latency) represent sustained baseline performance on the Jetson Orin Nano 8GB prior to physical conveyor automation. TensorRT FP16 optimization reduces pure inference latency (e.g., YOLOv11s pure inference drops to 28.2 ms with a total end-to-end latency of 56.4 ms) and yields up to 7.5°C lower SoC operating temperatures compared to native PyTorch. Accuracy metrics ($mAP@0.5$) remain *To Be Defined (TBD)* and will be evaluated under dynamic operational conditions once conveyor belt automation is complete.
 
 ## Repository Structure
 
@@ -178,12 +176,11 @@ remote-vision-lab/
 - [x] First validated inference run (YOLOv11s + TensorRT FP16 → 47.2 FPS)
 - [x] Dual camera streaming operational
 - [x] Model selection and experiment launch via web interface
-- [ ] Full TensorRT FP16 benchmarking across all model variants
+- [x] Full TensorRT FP16 benchmarking across all model variants
 - [ ] BoT-SORT vs ByteTrack comparative evaluation
 - [ ] Conveyor belt automation integration
 - [ ] Public web interface for remote students
-- [ ] Adversarial robustness experiments (occlusion + illumination)
-- [ ] Correlation analysis: electrical telemetry ↔ model performance
+
 
 ---
 
@@ -215,7 +212,6 @@ Computer Vision & Machine Learning Engineer | Engineering Laboratory, UNGS
 
 ## Acknowledgments
 
-- **Fundación YPF** — Project funding.
 - **CONFEDI R-Lab** — Institutional framework.
 - **Universidad Nacional de General Sarmiento (UNGS)** — Host institution.
 
