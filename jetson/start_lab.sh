@@ -6,7 +6,7 @@ cd /home/jetson
 sleep 2
 
 # Lanzar audio permanente
-ffmpeg -y -f alsa -ac 2 -ar 48000 -i hw:BYPM300 \
+ffmpeg -y -f alsa -ac 2 -ar 48000 -i hw:BYPM300,0 \
   -c:a libopus -b:a 64k -vn \
   -f rtsp -rtsp_transport tcp \
   rtsp://localhost:8554/audio &
