@@ -1,0 +1,15 @@
+[Unit]
+Description=Lab Remoto - API FastAPI
+After=network.target lab-stream.service
+Wants=lab-stream.service
+
+[Service]
+Type=simple
+User=jetson
+WorkingDirectory=/home/jetson
+ExecStart=/usr/bin/python3 -m uvicorn control_api:app --host 0.0.0.0 --port 8765
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

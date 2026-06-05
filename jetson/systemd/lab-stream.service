@@ -1,0 +1,15 @@
+[Unit]
+Description=Lab Remoto - MediaMTX + Audio
+After=network.target sound.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=jetson
+WorkingDirectory=/home/jetson
+ExecStart=/home/jetson/start_lab.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

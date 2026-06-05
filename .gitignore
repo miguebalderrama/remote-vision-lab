@@ -216,3 +216,43 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# TensorRT models (too large for git)
+*.engine
+
+# PyTorch model weights (too large for git)
+*.pt
+*.pth
+
+# Temporary benchmark outputs
+/tmp/
+benchmark_out.log
+benchmark_err.log
+lab_metrics.json
+
+# MediaMTX binary
+mediamtx
+
+# System
+*.DS_Store
+Thumbs.db
+
+# TensorRT models (too large for git)
+*.engine
+
+# PyTorch model weights (too large for git)
+*.pt
+*.pth
+
+# Temporary benchmark outputs
+/tmp/
+benchmark_out.log
+benchmark_err.log
+lab_metrics.json
+
+# MediaMTX binary
+mediamtx
+
+# System
+*.DS_Store
+Thumbs.db
